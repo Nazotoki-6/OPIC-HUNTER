@@ -3,338 +3,201 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#0b1020">
-  <title>WORD HUNTER｜ゆか × たけ</title>
-  <link rel="stylesheet" href="style.css">
-
-<link rel="manifest" href="./manifest.json">
-<meta name="theme-color" content="#0b1020">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="ワードゲーム">
-<link rel="apple-touch-icon" href="./icon-192.png">
-
+  <meta name="theme-color" content="#081b38">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="お題当てゲーム">
+  <title>お題当てゲーム｜たけ × ゆか</title>
+  <link rel="manifest" href="./manifest.json">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <link rel="stylesheet" href="./style.css?v=55">
 </head>
 <body>
-
 <div id="updateBanner" class="update-banner" hidden>
-  <div class="update-banner__text">
-    <strong>アプリに更新があります</strong>
-    <span>最新版を反映できます。</span>
-  </div>
-  <button id="updateAppButton" type="button" class="update-banner__button">最新版に更新</button>
+  <div><strong>最新版があります</strong><span>更新して新しい版を使えます。</span></div>
+  <button id="updateAppButton" type="button">最新版に更新</button>
 </div>
 
 <main class="app">
   <section id="home" class="screen active">
-    <div class="hero">
-      <div class="eyebrow">YUKA × TAKE</div>
-      <h1>WORD<br>HUNTER</h1>
-      <p>回答者が質問してお題を当てる、ゆか・たけ専用の2人ゲーム。</p>
-    </div>
+    <div class="home-wrap">
+      <div class="brand">TOPIC HUNTER</div>
+      <h1>お題当てゲーム</h1>
+      <p class="home-lead">質問しながら、少ないカウントでお題を当てる2人ゲーム。</p>
 
-    <div class="card home-card">
-      <div class="fixed-players">
-        <span class="fixed-players-label">プレイメンバー</span>
-        <strong>たけ × ゆか</strong>
-        <span id="nextAnswererHome" class="next-answerer-home">次の回答者：---</span>
+      <div class="home-card">
+        <div class="players-fixed"><span>プレイヤー</span><strong>たけ × ゆか</strong></div>
+        <div id="nextAnswererHome" class="next-answerer">次の回答者：---</div>
+        <div id="dataStatus" class="data-status">お題を準備中…</div>
+        <button id="startBtn" type="button" class="btn primary large">ゲーム開始</button>
+        <div class="home-menu">
+          <button id="historyBtn" type="button" class="btn secondary">プレイ履歴</button>
+          <button id="rulesBtn" type="button" class="btn secondary">ルール</button>
+          <button id="genreListBtn" type="button" class="btn secondary">ジャンル一覧</button>
+          <button id="bgmToggleHome" type="button" class="btn secondary bgm-toggle" aria-pressed="true">♪ BGM ON</button>
+        </div>
       </div>
-      <p id="dataStatus" class="hint">お題を準備中…</p>
-      <div class="home-actions">
-        <button type="button" id="historyBtn" class="secondary">📊 プレイ履歴</button>
-        <button type="button" id="rulesBtn" class="secondary">📖 ルールを見る</button>
-        <button type="button" id="genreListBtn" class="secondary">📚 ジャンル一覧</button>
-      </div>
-      <button type="button" id="startBtn" class="primary">ゲーム開始</button>
     </div>
   </section>
 
-  <section id="pass" class="screen topic-flow-screen">
-    <div class="topic-flow-card pass-clean-card">
-      <div class="topic-flow-step">お題確認</div>
-      <h2 id="passTitle" class="pass-clean-title">ゆかへ</h2>
-      <p id="passMessage" class="pass-clean-message">回答者は画面を見ないでください。</p>
-      <button type="button" id="showWordBtn" class="topic-primary-btn">ゆかがお題を確認</button>
+  <section id="pass" class="screen">
+    <div class="flow-card">
+      <div class="flow-chip">お題確認</div>
+      <h2 id="passTitle">ゆかへ</h2>
+      <p id="passMessage">回答者は画面を見ないでください。</p>
+      <button id="showWordBtn" type="button" class="btn primary large">ゆかがお題を確認</button>
     </div>
   </section>
 
-  <section id="word" class="screen topic-flow-screen">
-    <div class="topic-flow-card secret-clean-card">
-      <div id="wordPlayer" class="secret-owner-chip">出題側だけ確認</div>
-
-      <div class="secret-warning">回答者は見ないでください</div>
-
-      <div class="secret-topic-label">今回のお題</div>
-      <div id="secretWord" class="secret-word secret-word-clean">---</div>
-
-      <div class="secret-meta-box">
-        <p id="secretGenre" class="secret-genre-clean"></p>
-        <p id="sourceWork" class="source-work secret-source-clean" style="display:none"></p>
+  <section id="word" class="screen">
+    <div class="flow-card secret-card">
+      <div id="wordPlayer" class="flow-chip">出題側だけ確認</div>
+      <div class="warning">回答者は見ないでください</div>
+      <div class="secret-label">今回のお題</div>
+      <div id="secretWord" class="secret-word">---</div>
+      <div class="secret-meta">
+        <div id="secretGenre" class="secret-genre"></div>
+        <div id="sourceWork" class="source-work" hidden></div>
       </div>
-
-      <button type="button" id="changeWordBtn" class="topic-change-btn">お題を1回だけ変更</button>
-      <p id="changeWordHint" class="secret-change-hint">分からないお題のときだけ使えます。</p>
-
-      <button type="button" id="hideWordBtn" class="topic-primary-btn">確認した・お題を隠す</button>
+      <button id="changeWordBtn" type="button" class="btn secondary">お題を1回だけ変更</button>
+      <div id="changeWordHint" class="tiny-note">分からないお題のときだけ使えます。</div>
+      <button id="hideWordBtn" type="button" class="btn primary large">確認した・お題を隠す</button>
     </div>
   </section>
 
-  <section id="handoff" class="screen topic-flow-screen">
-    <div class="topic-flow-card handoff-clean-card">
-      <div class="handoff-clean-icon">✓</div>
+  <section id="handoff" class="screen">
+    <div class="flow-card">
+      <div class="done-icon">✓</div>
       <h2>お題を隠しました</h2>
       <p id="handoffText">画面を回答者にも見える位置へ戻してください。</p>
-      <button type="button" id="handoffBtn" class="topic-primary-btn">ゲームスタート</button>
+      <button id="handoffBtn" type="button" class="btn primary large">ゲームスタート</button>
     </div>
   </section>
 
-  <section id="game" class="screen">
-    <div class="clean-game-page">
-      <header class="clean-header">
-        <div>
-          <div class="clean-kicker">COUNT GAME</div>
-          <h1 class="clean-title">お題当てゲーム</h1>
+  <section id="game" class="screen game-screen">
+    <div class="game-wrap">
+      <header class="game-header">
+        <div><div class="brand small">TOPIC HUNTER</div><h1>お題当てゲーム</h1></div>
+        <div class="game-header-actions">
+          <button id="bgmToggleGame" type="button" class="btn mini bgm-toggle" aria-pressed="true">♪ BGM ON</button>
+          <button id="gameRulesBtn" type="button" class="btn mini">ルール</button>
         </div>
-        <button type="button" id="gameRulesBtn" class="clean-rule-btn">📖 ルール</button>
       </header>
 
-      <section class="clean-presenter-banner" aria-live="polite">
-        <div class="clean-presenter-icon">📣</div>
-        <div class="clean-presenter-copy">
-          <span>いまの出題側は</span>
-          <strong id="presenterBannerName">ゆか</strong>
-          <span>です</span>
-        </div>
-      </section>
+      <div class="turn-banner"><span>📣</span><div>いまの出題側は <strong id="presenterBannerName">ゆか</strong> です</div></div>
 
-      <section id="roleStatusCard" class="clean-role-grid" aria-label="現在の役割">
-        <article id="presenterRole" class="clean-role-card presenter">
-          <div class="clean-role-label">出題側</div>
-          <div id="presenterName" class="clean-role-player">ゆか</div>
-          <div class="clean-role-note">お題を確認して答える</div>
-        </article>
-
-        <div class="clean-role-arrow-wrap">
-          <div class="clean-role-arrow">❯❯</div>
-          <div id="roleSentence" class="clean-role-sentence">ゆかが出題側<br>たけが回答側</div>
-        </div>
-
-        <article id="answererRole" class="clean-role-card answerer">
-          <div class="clean-role-label">回答側</div>
-          <div id="answererRoleName" class="clean-role-player">たけ</div>
-          <div class="clean-role-note">質問してお題を当てる</div>
-        </article>
-      </section>
-
-      <div id="roleGuide" class="role-guide" hidden>
-        <strong id="roleGuideAnswerer">回答者：---</strong>
+      <div id="roleStatusCard" class="role-summary">
+        <span class="role-chip presenter">出題側</span>
+        <strong id="presenterName" class="role-name presenter">ゆか</strong>
+        <span class="role-arrow">→</span>
+        <span class="role-chip answerer">回答者</span>
+        <strong id="answererRoleName" class="role-name answerer">たけ</strong>
+        <div id="roleSentence" class="sr-only">出題側：ゆか → 回答者：たけ</div>
       </div>
-      <p id="gameGuide" class="clean-hidden-guide">回答者がお題について質問し、出題側が答えます。</p>
 
-      <section id="publicGameInfo" class="clean-status-panel" style="display:none;">
-        <div class="clean-status-block">
-          <div class="clean-status-label">現在のカウント</div>
-          <div class="clean-count-row">
-            <span class="clean-q">質問 <strong id="questionCountDisplay">0</strong></span>
-            <span class="clean-a">回答 <strong id="answerCountDisplay">0</strong></span>
+      <div id="publicGameInfo" class="game-info" hidden>
+        <div class="info-card count-card">
+          <div class="info-label">カウント</div>
+          <div class="counts">
+            <span>質問 <strong id="questionCountDisplay">0</strong></span>
+            <span>回答 <strong id="answerCountDisplay">0</strong></span>
+            <span>合計 <strong id="questionRemaining">0</strong></span>
           </div>
-          <div class="clean-total">合計 <strong id="questionRemaining">0</strong></div>
         </div>
-        <div class="clean-status-divider"></div>
-        <div class="clean-status-block">
-          <div class="clean-status-label">今回のジャンル</div>
-          <div class="clean-genre"><strong id="publicGenre">-</strong></div>
+        <div class="info-card genre-card">
+          <div class="info-label">ジャンル</div>
+          <strong id="publicGenre">-</strong>
         </div>
-      </section>
-
-      <section class="clean-action-grid clean-action-three">
-        <button id="questionUsedButton" type="button" class="clean-count-btn question">
-          <span>質問</span><b>＋1</b>
-        </button>
-        <button id="answerUsedButton" type="button" class="clean-count-btn answer">
-          <span>回答</span><b>＋1</b>
-        </button>
-        <button id="countUndoButton" type="button" class="clean-count-btn undo">
-          <span>取り消し</span><b>−1</b>
-        </button>
-      </section>
-
-      <section class="clean-action-grid clean-action-two">
-        <button type="button" id="answerBtn" class="clean-main-btn correct">
-          <span class="clean-main-icon">✓</span>
-          <span><b>正解</b><small>次のお題へ</small></span>
-        </button>
-        <button type="button" id="passGameBtn" class="clean-main-btn pass">
-          <span class="clean-main-icon">▶|</span>
-          <span><b>パス</b><small>お題を変える</small></span>
-        </button>
-      </section>
-
-      <div id="correctCountReminder" class="clean-reminder" role="note">
-        正解の回答も「回答＋1」してから「正解」を押します
       </div>
 
-      <nav class="clean-bottom-nav" aria-label="ゲームメニュー">
-        <button type="button" id="gameHideTopicBtn"><span>👁</span><small>お題を隠す</small></button>
-        <button type="button" id="gameChangeTopicBtn"><span>⇄</span><small>お題を変更</small></button>
-        <button type="button" id="gameHistoryBtn"><span>📄</span><small>履歴を見る</small></button>
-        <button type="button" id="gameGenreBtn"><span>▦</span><small>ジャンル一覧</small></button>
+      <div class="count-actions">
+        <button id="questionUsedButton" type="button" class="count-btn question"><span>質問</span><b>＋1</b></button>
+        <button id="answerUsedButton" type="button" class="count-btn answer"><span>回答</span><b>＋1</b></button>
+        <button id="countUndoButton" type="button" class="count-btn undo"><span>取り消し</span><b>−1</b></button>
+      </div>
+
+      <div class="finish-actions">
+        <button id="answerBtn" type="button" class="finish-btn correct"><span class="finish-icon">✓</span><span><b>正解</b><small>次のお題へ</small></span></button>
+        <button id="passGameBtn" type="button" class="finish-btn pass"><span class="finish-icon">▶</span><span><b>パス</b><small>答えを確認</small></span></button>
+      </div>
+
+      <div id="correctCountReminder" class="count-reminder">正解のときも先に「回答＋1」を押してから「正解」を押します。</div>
+
+      <nav class="game-nav">
+        <button id="gameHistoryBtn" type="button">履歴</button>
+        <button id="gameGenreBtn" type="button">ジャンル</button>
+        <button id="gameHomeBtn" type="button">トップ</button>
       </nav>
-
-      <button type="button" id="gameHomeBtn" class="clean-hidden-dummy" aria-hidden="true" tabindex="-1">home</button>
     </div>
   </section>
 
-  <section id="answer" class="screen">
-    <div class="card center">
-      <span class="step">ROUND END</span>
-      <h2>お題を確認</h2>
-      <p id="oralPrompt">お題を確認しましょう。</p>
-      <button type="button" id="oralNextBtn" class="primary">答えを見る</button>
-    </div>
-  </section>
-
-  <section id="result" class="screen">
-    <div class="card center">
-      <span class="step">RESULT</span>
-      <h2 id="resultTitle">結果</h2>
-      <div id="resultBody" class="result-body tablet-result"></div>
-<button type="button" id="againBtn" class="primary" style="display:none">もう一度遊ぶ</button>
-      <button type="button" id="homeBtn" class="secondary">トップへ戻る</button>
+  <section id="passResult" class="screen">
+    <div class="flow-card result-card">
+      <div class="flow-chip">パス</div>
+      <h2>今回のお題</h2>
+      <div id="passResultTopic" class="result-topic">---</div>
+      <div id="passResultMeta" class="result-meta"></div>
+      <div id="passResultCount" class="result-count"></div>
+      <button id="nextRoundBtn" type="button" class="btn primary large">次のゲームへ</button>
     </div>
   </section>
 </main>
 
 <div id="rulesModal" class="modal" aria-hidden="true">
-  <div class="modal-backdrop" data-close-modal></div>
+  <div class="modal-backdrop" data-close="rules"></div>
   <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
-    <button type="button" class="modal-close" id="closeRulesBtn" aria-label="閉じる">×</button>
-    <h2 id="rulesTitle">📖 ルール</h2>
-    <p><b>1人が回答者になり、ほかの人が出題側になります。回答者は質問しながらお題を当てます。</b></p>
+    <button id="closeRulesBtn" type="button" class="modal-close" aria-label="閉じる">×</button>
+    <h2 id="rulesTitle">ルール</h2>
     <ol>
-      <li><b>回答者は画面を見ず、出題側だけがお題を確認</b>します。</li>
-      <li>回答者には<b>ジャンルだけ</b>公開します。</li>
-      <li><b>時間制限はありません。</b>正解までのカウント数を競います。</li>
-      <li>質問を1つするたびに<b>＋1カウント</b>します。</li>
-      <li>具体的なお題名を言って当てにいく「回答」も、1回につき<b>＋1カウント</b>します。</li>
-      <li>回答を外しても終了しません。何度でも質問・回答を続けられます。</li>
-      <li>1回の質問で複数のことを聞いた場合は、聞いた内容の数だけカウントします。</li>
-      <li>出題側の返答は原則<b>「はい／いいえ／どちらともいえない／わからない」</b>の4種類です。「惜しい」「近い」など追加ヒントは禁止です。</li>
-      <li>略称・愛称でも、何を指しているか明確なら正解とします。</li>
-      <li>出題側の言い間違いや操作ミスで増えた分は「取り消し −1」で戻せます。</li>
-      <li>どうしても分からない場合は<b>「パス」</b>で終了できます。</li>
-      <li>正解したら、その時点のカウントが今回の記録です。<b>少ないほど好成績</b>です。</li>
+      <li>1人が<strong>回答者</strong>、もう1人が<strong>出題側</strong>です。</li>
+      <li>回答者はお題を見ず、<strong>ジャンルだけ</strong>を見て質問します。</li>
+      <li><strong>時間制限はありません。</strong></li>
+      <li>質問1つにつき<strong>＋1</strong>。お題名を言う回答も1回につき<strong>＋1</strong>です。</li>
+      <li>1回に複数の質問をした場合は、質問した内容の数だけカウントします。</li>
+      <li>回答を外しても続行。正解するまで何度でも質問・回答できます。</li>
+      <li>出題側の返答は「はい／いいえ／どちらともいえない／わからない」の4種類です。</li>
+      <li>略称・愛称でも、何を指すか明確なら正解です。</li>
+      <li>操作ミスなどで増えた分は<strong>取り消し −1</strong>で戻せます。</li>
+      <li>出題側は、お題を知らない場合に限り<strong>1回だけお題を変更</strong>できます。</li>
+      <li>どうしても分からない場合は<strong>パス</strong>できます。</li>
+      <li>正解した時点の合計カウントが記録。<strong>少ないほど好成績</strong>です。</li>
     </ol>
-    <div class="example">
-      <b>例：お題「カレー」</b><br>
-      「食べ物ですか？」→ 質問 ＋1<br>
-      出題側「はい」<br>
-      「ラーメン？」→ 回答 ＋1（不正解でも続行）<br>
-      「ご飯を使いますか？」→ 質問 ＋1<br>
-      「カレー？」→ 回答 ＋1 → 正解！<br>
-      <b>記録：4カウント</b>
-    </div>
-  </div>
-</div>
-
-<script src="script.js"></script>
-
-<script>
-if ("serviceWorker" in navigator) {
-  let waitingWorker = null;
-  let refreshing = false;
-
-  function showUpdate(worker) {
-    waitingWorker = worker || waitingWorker;
-    const banner = document.getElementById("updateBanner");
-    if (banner) banner.hidden = false;
-  }
-
-  navigator.serviceWorker.addEventListener("controllerchange", () => {
-    if (refreshing) return;
-    refreshing = true;
-    location.reload();
-  });
-
-  window.addEventListener("load", async () => {
-    const button = document.getElementById("updateAppButton");
-    if (button) {
-      button.addEventListener("click", async () => {
-        button.disabled = true;
-        button.textContent = "更新中…";
-        const reg = await navigator.serviceWorker.getRegistration();
-        const worker = waitingWorker || (reg && reg.waiting);
-        if (worker) worker.postMessage({ type: "SKIP_WAITING" });
-        else location.reload();
-      });
-    }
-
-    try {
-      const reg = await navigator.serviceWorker.register("./service-worker.js");
-      if (reg.waiting) showUpdate(reg.waiting);
-      reg.addEventListener("updatefound", () => {
-        const worker = reg.installing;
-        if (!worker) return;
-        worker.addEventListener("statechange", () => {
-          if (worker.state === "installed" && navigator.serviceWorker.controller) showUpdate(worker);
-        });
-      });
-      reg.update().catch(() => {});
-      document.addEventListener("visibilitychange", () => {
-        if (document.visibilityState === "visible") reg.update().catch(() => {});
-      });
-      setInterval(() => reg.update().catch(() => {}), 60 * 60 * 1000);
-    } catch (err) {
-      console.error("Service Worker registration failed:", err);
-    }
-  });
-}
-</script>
-
-
-<div id="genreModal" class="modal" aria-hidden="true">
-  <div class="modal-backdrop" data-close-genre-modal></div>
-  <div class="modal-card genre-modal-card" role="dialog" aria-modal="true">
-    <div class="modal-header">
-      <h2>ジャンル一覧</h2>
-      <button type="button" id="closeGenreModalBtn" class="icon-btn" aria-label="閉じる">✕</button>
-    </div>
-    <p id="genreSummary" class="genre-summary"></p>
-    <div id="genreListBody" class="genre-list-body"></div>
-  </div>
-</div>
-
-<div class="app-version-info" aria-label="アプリのバージョン情報">
-  <span>Version 52</span>
-  <span>最終更新：2026年9月11日</span>
-</div>
-
-
-<div id="confirmModal" class="modal" aria-hidden="true">
-  <div class="modal-backdrop" data-close-confirm></div>
-  <div class="modal-card confirm-card">
-    <button class="modal-close" id="confirmCloseBtn" type="button">×</button>
-    <h2 id="confirmTitle">確認</h2>
-    <p id="confirmMessage"></p>
-    <div class="confirm-actions">
-      <button id="confirmCancelBtn" class="secondary" type="button">戻る</button>
-      <button id="confirmOkBtn" class="primary" type="button">終了する</button>
-    </div>
   </div>
 </div>
 
 <div id="historyModal" class="modal" aria-hidden="true">
-  <div class="modal-backdrop" data-close-history></div>
-  <div class="modal-card history-card">
-    <button class="modal-close" id="historyCloseBtn" type="button">×</button>
-    <h2>📊 プレイ履歴</h2>
-    <div id="historySummary" class="history-summary"></div>
-
-      <div id="playerStats" class="player-stats"></div>
-
+  <div class="modal-backdrop" data-close="history"></div>
+  <div class="modal-card wide" role="dialog" aria-modal="true" aria-labelledby="historyTitle">
+    <button id="historyCloseBtn" type="button" class="modal-close" aria-label="閉じる">×</button>
+    <h2 id="historyTitle">プレイ履歴</h2>
+    <div id="playerStats" class="player-stats"></div>
     <div id="historyList" class="history-list"></div>
-    <div class="history-actions"><button id="historyClearBtn" class="secondary" type="button">履歴を消す</button></div>
+    <button id="historyClearBtn" type="button" class="btn danger">履歴を消す</button>
   </div>
 </div>
+
+<div id="genreModal" class="modal" aria-hidden="true">
+  <div class="modal-backdrop" data-close="genre"></div>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="genreTitle">
+    <button id="closeGenreModalBtn" type="button" class="modal-close" aria-label="閉じる">×</button>
+    <h2 id="genreTitle">ジャンル一覧</h2>
+    <div id="genreListBody" class="genre-list"></div>
+  </div>
+</div>
+
+<div id="passConfirmModal" class="modal" aria-hidden="true">
+  <div class="modal-backdrop" data-close="passConfirm"></div>
+  <div class="modal-card confirm-card" role="dialog" aria-modal="true" aria-labelledby="passConfirmTitle">
+    <h2 id="passConfirmTitle">パスしますか？</h2>
+    <p>今回のお題を表示して、このラウンドを終了します。</p>
+    <div class="confirm-actions">
+      <button id="passCancelBtn" type="button" class="btn secondary">戻る</button>
+      <button id="passConfirmBtn" type="button" class="btn danger">パスする</button>
+    </div>
+  </div>
+</div>
+
+<div id="updateInfo" class="version-info">Version 56 ・ 2026年9月22日</div>
+<script src="./script.js?v=55" defer></script>
 </body>
 </html>

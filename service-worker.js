@@ -1,53 +1,41 @@
-const CACHE_NAME = "odaiate-pwa-v52-clean-topic-screen";
-
-const APP_FILES = [
+const CACHE_NAME = "odaiate-pwa-v56-bgm";
+const PRECACHE = [
   "./",
   "./index.html",
-  "./style.css",
-  "./script.js",
-  "./topics.csv",
+  "./style.css?v=55",
+  "./script.js?v=55",
   "./manifest.json",
   "./icon-192.png",
-  "./icon-512.png"
+  "./icon-512.png",
+  "./topics.csv"
 ];
-
 self.addEventListener("install", event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(APP_FILES))
-  );
+  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(PRECACHE)));
 });
-
 self.addEventListener("activate", event => {
-  event.waitUntil(
-    caches.keys()
-      .then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))))
-      .then(() => self.clients.claim())
-  );
+  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE_NAME && (k.startsWith("topic-hunter-") || k.startsWith("odaiate-pwa-"))).map(k => caches.delete(k)))).then(() => self.clients.claim()));
 });
-
-self.addEventListener("fetch", event => {
-  if (event.request.method !== "GET") return;
-
-  event.respondWith(
-    caches.match(event.request).then(cached => {
-      if (cached) return cached;
-
-      return fetch(event.request)
-        .then(response => {
-          if (response && response.ok && new URL(event.request.url).origin === self.location.origin) {
-            const copy = response.clone();
-            caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy)).catch(() => {});
-          }
-          return response;
-        })
-        .catch(() => {
-          if (event.request.mode === "navigate") return caches.match("./index.html");
-          return Response.error();
-        });
-    })
-  );
-});
-
 self.addEventListener("message", event => {
-  if (event.data && event.data.type === "SKIP_WAITING") self.skipWaiting();
+  if (event.data?.type === "SKIP_WAITING") self.skipWaiting();
+});
+self.addEventListener("fetch", event => {
+  const req = event.request;
+  if (req.method !== "GET") return;
+  const url = new URL(req.url);
+  if (url.origin !== self.location.origin) return;
+  if (req.mode === "navigate") {
+    event.respondWith(fetch(req).then(res => {
+      const copy = res.clone();
+      caches.open(CACHE_NAME).then(c => c.put("./index.html", copy)).catch(() => {});
+      return res;
+    }).catch(() => caches.match("./index.html")));
+    return;
+  }
+  event.respondWith(caches.match(req).then(cached => {
+    const network = fetch(req).then(res => {
+      if (res && res.ok) caches.open(CACHE_NAME).then(c => c.put(req, res.clone())).catch(() => {});
+      return res;
+    }).catch(() => cached || Response.error());
+    return cached || network;
+  }));
 });
