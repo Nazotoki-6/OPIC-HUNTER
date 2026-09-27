@@ -1,4 +1,4 @@
-const CACHE_NAME = "odaiate-pwa-v61-tense-loud-bgm";
+const CACHE_NAME = "odaiate-pwa-v62-music-artist-genre";
 const PRECACHE = [
   "./",
   "./index.html",
